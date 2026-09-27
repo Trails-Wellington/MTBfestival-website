@@ -449,31 +449,34 @@ margin: 0rem !important;
     hour = minute * 60,
     day = hour * 24;
 	// Set the target date and time for the countdown (format: "MM/DD/YYYY HH:mm:ss")
+	// Once it has passed, the timer counts up to show how long ago it was
   const targetDateString = "02/27/2026 09:00:00";
   const targetDate = new Date(targetDateString).getTime();
+  const countdown = document.getElementById('days').closest('.event-item-header5_countdown');
+  let showingPast = false;
   const updateCountdown = () => {
-    const now = new Date().getTime(), // Get the current date and time
-      distance = targetDate - now; // Calculate the time remaining until the target date
-		// Update the HTML elements with the remaining time
-    document.getElementById('days').innerText = Math.floor(distance / day);
-    document.getElementById('hours').innerText = Math.floor((distance % day) / hour);
-    document.getElementById('minutes').innerText = Math.floor((distance % hour) / minute);
-    document.getElementById('seconds').innerText = Math.floor((distance % minute) / second);
-    // Check if the target date has already passed
-    if (distance < 0) {
-      clearInterval(interval); // Stop the countdown timer
-				document.getElementById('days').innerText = '0';
-				document.getElementById('hours').innerText = '0';
-				document.getElementById('minutes').innerText = '0';
-				document.getElementById('seconds').innerText = '0';
-      // You can display an element at the end of the countdown with this ID  
-        document.getElementById('message').style.display = 'block';
+    const distance = targetDate - new Date().getTime(),
+      elapsed = Math.abs(distance);
+		// Update the HTML elements with the remaining (or elapsed) time
+    document.getElementById('days').innerText = Math.floor(elapsed / day);
+    document.getElementById('hours').innerText = Math.floor((elapsed % day) / hour);
+    document.getElementById('minutes').innerText = Math.floor((elapsed % hour) / minute);
+    document.getElementById('seconds').innerText = Math.floor((elapsed % minute) / second);
+    // Once the target date has passed, relabel the timer as time since
+    if (distance < 0 && !showingPast) {
+      showingPast = true;
+      const label = countdown.closest('.event-item-header5_countdown-wrapper').querySelector(':scope > .text-size-large');
+      if (label && label.innerText.trim() === 'Starts') label.innerText = 'Started';
+      const ago = document.createElement('div');
+      ago.className = 'text-size-large';
+      ago.innerText = 'ago';
+      countdown.after(ago);
     }
   };
   // Initial call to update countdown
   updateCountdown();
   // Update the countdown every second
-  const interval = setInterval(updateCountdown, 1000);
+  setInterval(updateCountdown, 1000);
 })();
 </script>
                         </div>
