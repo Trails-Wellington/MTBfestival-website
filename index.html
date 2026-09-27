@@ -506,7 +506,7 @@ margin: 0rem !important;
     if (distance < 0 && !showingPast) {
       showingPast = true;
       const label = countdown.closest('.event-item-header5_countdown-wrapper').querySelector(':scope > .text-size-large');
-      if (label && label.innerText.trim() === 'Starts') label.innerText = 'Started';
+      if (label && label.innerText.trim() === 'Starts') label.innerText = 'Festival Over. It started:';
       const ago = document.createElement('div');
       ago.className = 'text-size-large';
       ago.innerText = 'ago';
